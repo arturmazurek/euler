@@ -13,6 +13,7 @@
 #include <fstream>
 #include <limits>
 #include <map>
+#include <set>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -22,6 +23,8 @@
 using namespace std;
 
 static const int MILION = 1000000;
+
+typedef unsigned long ulong;
 
 inline long toNumber(char c);
 inline long toNumber(const vector<int>& digits);
@@ -46,7 +49,7 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem43();
+    problem44();
 }
 
 inline long toNumber(char c) {
@@ -263,4 +266,42 @@ void problem43() {
     } while (next_permutation(digits, digits + ARRAY_SIZE(digits)));
     
     cout << result << endl;
+}
+
+ulong _getPolygonalNumber(ulong n) {
+    return n * (3*n - 1) / 2;
+}
+
+void problem44() {
+    int N = 10000;
+    ulong polygons[N];
+    set<ulong> polygonsSet;
+    
+    for(int i = 0; i < N; ++i) {
+        polygons[i] = _getPolygonalNumber(i+1);
+        polygonsSet.insert(polygons[i]);
+    }
+    
+    // Two polygonal numbers pk and pj create pn
+    // suppose pk is smaller. Then pj-pk == D
+    // Then pj == pk + D
+    // 2pk + D == pn
+    // since we want the smallest D we can  iterate from it
+    
+    for(int i = 0; i < N; ++i) {
+        unsigned long d = polygons[i];
+        for(int k = 0; k < N; ++k) {
+            ulong pk = polygons[k];
+            
+            ulong pn = 2 * pk + d;
+            if(polygonsSet.count(pn)) {
+                if(polygonsSet.count(d + pk)) {
+                    cout << d << endl;
+                    return;
+                }
+            }
+        }
+    }
+    
+    cout << "Not found" << endl;
 }
