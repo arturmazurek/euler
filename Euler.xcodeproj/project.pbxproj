@@ -28,6 +28,7 @@
 		6D89DC7A15D3CAD600C5ED6E /* Euler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Euler; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D89DC7E15D3CAD600C5ED6E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		6D89DC8015D3CAD600C5ED6E /* Euler.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Euler.1; sourceTree = "<group>"; };
+		6DC1E7CE15D3FF98004EB36D /* words.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +45,7 @@
 		6D89DC6F15D3CAD600C5ED6E = {
 			isa = PBXGroup;
 			children = (
+				6DC1E7CE15D3FF98004EB36D /* words.txt */,
 				6D89DC7D15D3CAD600C5ED6E /* Euler */,
 				6D89DC7B15D3CAD600C5ED6E /* Products */,
 			);
@@ -176,6 +178,8 @@
 		6D89DC8515D3CAD600C5ED6E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -183,6 +187,8 @@
 		6D89DC8615D3CAD600C5ED6E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -206,6 +212,7 @@
 				6D89DC8615D3CAD600C5ED6E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
