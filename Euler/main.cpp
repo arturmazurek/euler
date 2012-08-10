@@ -30,7 +30,7 @@ inline long toNumber(char c);
 inline long toNumber(const vector<int>& digits);
 template <typename bidirectional_iterator>
 inline long toNumber(bidirectional_iterator begin, bidirectional_iterator end);
-inline bool isPrime(unsigned int n);
+inline bool isPrime(ulong n);
 inline unsigned long lowestDivisor(unsigned long n);
 inline long powd(long x, long power);
 
@@ -42,6 +42,8 @@ void problem41();
 void problem42();
 void problem43();
 void problem44();
+void problem45();
+void problem46();
 
 int main(int argc, const char * argv[])
 {
@@ -49,7 +51,7 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem44();
+    problem46();
 }
 
 inline long toNumber(char c) {
@@ -73,7 +75,7 @@ inline long toNumber(bidirectional_iterator begin, bidirectional_iterator end) {
     return result;
 }
 
-inline bool isPrime(unsigned int n) {
+inline bool isPrime(ulong n) {
     return lowestDivisor(n) == n;
 }
 
@@ -180,7 +182,7 @@ void problem41() {
         }
         
         do {
-            int value = (int)toNumber(digits);
+            ulong value = toNumber(digits);
             if(isPrime(value)) {
                 cout << value << endl;
                 return;
@@ -304,4 +306,65 @@ void problem44() {
     }
     
     cout << "Not found" << endl;
+}
+
+ulong _getTriangleNumber(ulong n) {
+    return n * (n + 1) / 2;
+}
+
+ulong _getHexagonalNumber(ulong n) {
+    return n * (2*n - 1);
+}
+
+ulong _getPentagonalNumber(ulong n) {
+    return n * (3*n - 1) / 2;
+}
+
+void problem45() {
+    set<ulong> triangle;
+    set<ulong> pentagon;
+    vector<ulong> hexagon;
+    
+    int N = 100000;
+    for(int i = 0; i < N; ++i) {
+        triangle.insert(_getTriangleNumber(i));
+        pentagon.insert(_getPentagonalNumber(i));
+        hexagon.push_back(_getHexagonalNumber(i));
+    }
+    
+    for(int i = 144; i < hexagon.size(); ++i) { // we start from 144
+        ulong number = hexagon[i];
+        if(number == 40755)  {
+            continue; // the number given as example in the problem
+        }
+        if(triangle.count(number) && pentagon.count(number)) {
+            cout << number << endl;
+            return;
+        }
+    }
+    
+    cout << "Not found" << endl;
+}
+
+bool _canBeWrittenAsPrimeAndTwiceASquare(ulong n) {
+    for(int i = 1; 2*i*i < n; ++i) {
+        ulong possiblePrime = n - 2*i*i;
+        if(isPrime(possiblePrime)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void problem46() {
+    ulong i =5;
+    while(true) {
+        if(!_canBeWrittenAsPrimeAndTwiceASquare(i)) {
+            if(!isPrime(i)) {
+                cout << i << endl;
+                return;
+            }
+        }
+        i+=2;
+    }
 }
