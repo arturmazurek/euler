@@ -44,6 +44,7 @@ void problem43();
 void problem44();
 void problem45();
 void problem46();
+void problem47();
 
 int main(int argc, const char * argv[])
 {
@@ -51,7 +52,7 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem46();
+    problem47();
 }
 
 inline long toNumber(char c) {
@@ -366,5 +367,82 @@ void problem46() {
             }
         }
         i+=2;
+    }
+}
+
+void _getPrimeFactors(ulong n, set<int>& digits) {
+    if(n == 1) {
+        return;
+    }
+    for(int i = 2; i <= n/2+1; ++i) {
+        if(n % i == 0) {
+            digits.insert(i);
+            _getPrimeFactors(n/i, digits);
+            return;
+        }
+    }
+    digits.insert((int)n);
+    return;
+}
+
+void problem47() {
+    set<int> digits1;
+    set<int> digits2;
+    set<int> digits3;
+    set<int> digits4;
+    
+    int N = 4;
+    
+    ulong i = 1;
+    while(++i) {
+        if(digits1.empty()) {
+            _getPrimeFactors(i, digits1);
+        }
+        if(digits1.size() != N) {
+            digits1.clear();
+            continue;
+        }
+        if(digits2.empty()) {
+            _getPrimeFactors(i+1, digits2);
+        }
+        if(digits1 == digits2) {
+            digits1 = digits2;
+            digits2.clear();
+            ++i;
+            continue;
+        }
+        
+        if(digits3.empty()) {
+            _getPrimeFactors(i+2, digits3);
+        }
+        if(digits3 == digits2) {
+            digits1 = digits3;
+            digits2.clear();
+            digits3.clear();
+            i+=2;
+            continue;
+        }
+            
+        if(digits4.empty()) {
+            _getPrimeFactors(i+3, digits4);
+        }
+        if(digits4 == digits3) {
+            digits1 = digits4;
+            digits2.clear();
+            digits3.clear();
+            digits4.clear();
+            i+=3;
+            continue;
+        }
+        
+        if(digits1.size() == N && digits2.size() == N && digits3.size() == N && digits4.size() == N) {
+            cout << i << endl;
+            return;
+        }
+        
+        digits1.clear();
+        digits2.clear();
+        digits3.clear();
+        digits4.clear();
     }
 }
