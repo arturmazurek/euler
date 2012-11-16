@@ -45,6 +45,7 @@ void problem44();
 void problem45();
 void problem46();
 void problem47();
+void problem48();
 
 int main(int argc, const char * argv[])
 {
@@ -52,7 +53,7 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem47();
+    problem48();
 }
 
 inline long toNumber(char c) {
@@ -444,5 +445,67 @@ void problem47() {
         digits2.clear();
         digits3.clear();
         digits4.clear();
+    }
+}
+
+template <int N>
+void add(const int* a, const int* b, int* res) {
+    int over = 0;
+    for(int i = N-1; i >=0; --i) {
+        res[i] = a[i] + b[i] + over;
+        over = res[i] / 10;
+        res[i] %= 10;
+    }
+}
+
+template <int N>
+void multiply(const int* a, const int* b, int* res) {
+    for(int i = N-1; i >= 0; --i) {
+        int temp[N];
+        memset(temp, 0, sizeof(temp));
+        
+        int over = 0;
+        for(int j = i; j >= 0; --j) {
+//            int index = j - (N-i-1);
+//            if(index < 0) {
+//                break;
+//            }
+            
+            temp[j] = b[i] * a[j] + over;
+            over = temp[j] / 10;
+            temp[j] %= 10;
+        }
+        add<N>(temp, res, res);
+    }
+}
+
+void problem48() {
+    constexpr int N = 10;
+    int n = 1000;
+    
+    int sum[N];
+    memset(sum, 0, sizeof(sum));
+    for(int i = 10; i <= 10; ++i) {
+        int a[N];
+        int temp = i;
+        for(int j = N-1; j >= 0; --j) {
+            a[j] = temp % 10;
+            temp /= 10;
+        }
+        
+        int b[N];
+        memcpy(b, a, sizeof(b));
+        
+        int res[N];
+        for(int j = 1; j < i; ++j) {
+            memset(res, 0, sizeof(res));
+            multiply<N>(a, b, res);
+            memcpy(a, res, sizeof(a));
+        }
+        
+        add<N>(a, sum, sum);
+    }
+    for(int i = 0; i < N; ++i) {
+        std::cout << sum[i];
     }
 }
