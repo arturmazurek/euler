@@ -449,7 +449,7 @@ void problem47() {
 }
 
 template <int N>
-void add(const int* a, const int* b, int* res) {
+void add(const int a[N], const int b[N], int res[N]) {
     int over = 0;
     for(int i = N-1; i >=0; --i) {
         res[i] = a[i] + b[i] + over;
@@ -459,21 +459,21 @@ void add(const int* a, const int* b, int* res) {
 }
 
 template <int N>
-void multiply(const int* a, const int* b, int* res) {
+void multiply(const int a[N], const int b[N], int res[N]) {    
     for(int i = N-1; i >= 0; --i) {
         int temp[N];
         memset(temp, 0, sizeof(temp));
         
         int over = 0;
-        for(int j = i; j >= 0; --j) {
-//            int index = j - (N-i-1);
-//            if(index < 0) {
-//                break;
-//            }
+        for(int j = N-1; j >= 0; --j) {
+            int index = j - (N-i-1);
+            if(index < 0) {
+                break;
+            }
             
-            temp[j] = b[i] * a[j] + over;
-            over = temp[j] / 10;
-            temp[j] %= 10;
+            temp[index] = b[i] * a[j] + over;
+            over = temp[index] / 10;
+            temp[index] %= 10;
         }
         add<N>(temp, res, res);
     }
@@ -485,7 +485,7 @@ void problem48() {
     
     int sum[N];
     memset(sum, 0, sizeof(sum));
-    for(int i = 10; i <= 10; ++i) {
+    for(int i = 1; i <= n; ++i) {
         int a[N];
         int temp = i;
         for(int j = N-1; j >= 0; --j) {
