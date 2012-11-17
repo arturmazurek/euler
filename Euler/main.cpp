@@ -13,6 +13,7 @@
 #include <fstream>
 #include <limits>
 #include <map>
+#include <memory>
 #include <set>
 #include <sstream>
 #include <string>
@@ -46,6 +47,8 @@ void problem45();
 void problem46();
 void problem47();
 void problem48();
+void problem49();
+void problem50();
 
 int main(int argc, const char * argv[])
 {
@@ -53,7 +56,7 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem48();
+    problem50();
 }
 
 inline long toNumber(char c) {
@@ -509,3 +512,92 @@ void problem48() {
         std::cout << sum[i];
     }
 }
+
+template <int N>
+bool isPerm(int a, int b) {
+    int arrA[N];
+    for(int i = N-1; i >= 0; --i) {
+        arrA[i] = a % 10;
+        a /= 10;
+    }
+    
+    int arrB[N];
+    for(int i = N-1; i >= 0; --i) {
+        arrB[i] = b % 10;
+        b /= 10;
+    }
+    
+    sort(arrA, arrA + N);
+    sort(arrB, arrB + N);
+    
+    return memcmp(arrA, arrB, sizeof(arrA)) == 0;
+}
+
+void problem49() {
+    for(int i = 1000; i <= 9999; ++i) {
+        int a = i;
+        
+        if(!isPrime(a)) {
+            continue;
+        }
+        
+        for(int j = 1000; j <= 9999; ++j) {
+            int b = a + j;
+            int c = a + 2*j;
+            
+            if(a > 9999 || b > 9999 || c > 9999) {
+                break;
+            }
+            
+            if(!(isPrime(b) && isPrime(c))) {
+                continue;
+            }
+            
+            if(!isPerm<4>(a, b) || !isPerm<4>(a, c)) {
+                continue;
+            }
+            
+            cout << a << " " << b << " " << c << " (" << j << ")" << endl;
+        }
+    }
+}
+
+static vector<int> _getPrimes(int upTo) {
+    vector<int> result;
+    for(int i = 2; i <= upTo; ++i) {
+        if(isPrime(i)) {
+            result.push_back(i);
+        }
+    }
+    return result;
+}
+
+void problem50() {
+    vector<int> primes = _getPrimes(MILION);
+    
+    int maxLen = numeric_limits<int>::min();
+    int maxNumber = numeric_limits<int>::min();
+    
+    int end = (int)primes.size();
+    for(int i = 0; i < primes.size(); ++i) {
+        int sum = primes[i];
+        int j = i + 1;
+        for(; j < primes.size(); ++j) {
+            sum += primes[j];
+            if(sum > MILION) {
+                break;
+            }
+            
+            if(isPrime(sum)) {
+                if(j - i > maxLen) {
+                    maxLen = j - i;
+                    maxNumber = sum;
+                }
+            }
+        }
+    }
+    
+    cout << maxNumber;
+}
+
+
