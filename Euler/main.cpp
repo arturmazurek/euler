@@ -586,15 +586,9 @@ static int _newtonSymbol(ulong n, ulong k) {
  *     _*_*_* is {1,1,0}
  */
 static void _getPermutation(int permutation, int n, int k, int* digits) {
-//    int temp = _newtonSymbol(n-1, k-1);
-//    
-//    if(permutation < temp) {
-//        digits[k-1] = 0;
-//        _getPermutation(permutation, n-1, k-1, digits);
-//    } else if (permutation < (temp += _newtonSymbol(n-2, k-1))) {
-//        digits[k-1] = 1;
-//        _getPermutation(n - temp, n-2, k-1, digits);
-//    }
+    if(k == 1) {
+        digits[0] = permutation;
+    }
     
     // possibilities count with this rightmost position
     int count = 0;
@@ -603,7 +597,7 @@ static void _getPermutation(int permutation, int n, int k, int* digits) {
         if(count > permutation) {
             // TODO step through it
             digits[k-1] = i;
-            _getPermutation(permutation-count, n-i, k-1, digits);
+            _getPermutation(permutation, n-i, k-1, digits);
         }
     }
 }
@@ -611,7 +605,7 @@ static void _getPermutation(int permutation, int n, int k, int* digits) {
 // unsolved yet
 void problem50() {
     int digits[] = {0, 0, 0};
-    _getPermutation(2, 5, 1, digits);
+    _getPermutation(3, 5, 3, digits);
     
     printf("End - %d, %d, %d", digits[2], digits[1], digits[0]);
 }
