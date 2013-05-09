@@ -562,42 +562,58 @@ void problem49() {
     }
 }
 
-static vector<int> _getPrimes(int upTo) {
-    vector<int> result;
-    for(int i = 2; i <= upTo; ++i) {
-        if(isPrime(i)) {
-            result.push_back(i);
-        }
+static ulong _factorial(ulong n) {
+    ulong result = 1;
+    while(n > 1) {
+        result *= n;
+        --n;
     }
     return result;
 }
 
-void problem50() {
-    vector<int> primes = _getPrimes(MILION);
+static int _newtonSymbol(ulong n, ulong k) {
+    return (int)(_factorial(n) / (_factorial(k)*_factorial(n-k)));
+}
+
+/**
+ *  Returns the permutation of a following form _**___*_
+ * permutation - index of permutation must not be larger than (n k)-1
+ * n - total number of places _
+ * k - number of elements we put there *
+ * digits - returned digits - they mark empty indices counted from the right (i.e from 10^0) of digits. Must be
+ *      allocated before the call and have size of k, e.g.
+ *     ___*** is {0,0,0}
+ *     _*_*_* is {1,1,0}
+ */
+static void _getPermutation(int permutation, int n, int k, int* digits) {
+//    int temp = _newtonSymbol(n-1, k-1);
+//    
+//    if(permutation < temp) {
+//        digits[k-1] = 0;
+//        _getPermutation(permutation, n-1, k-1, digits);
+//    } else if (permutation < (temp += _newtonSymbol(n-2, k-1))) {
+//        digits[k-1] = 1;
+//        _getPermutation(n - temp, n-2, k-1, digits);
+//    }
     
-    int maxLen = numeric_limits<int>::min();
-    int maxNumber = numeric_limits<int>::min();
-    
-    int end = (int)primes.size();
-    for(int i = 0; i < primes.size(); ++i) {
-        int sum = primes[i];
-        int j = i + 1;
-        for(; j < primes.size(); ++j) {
-            sum += primes[j];
-            if(sum > MILION) {
-                break;
-            }
-            
-            if(isPrime(sum)) {
-                if(j - i > maxLen) {
-                    maxLen = j - i;
-                    maxNumber = sum;
-                }
-            }
+    // possibilities count with this rightmost position
+    int count = 0;
+    for(int i = 1; i <= k; ++i) {
+        count += _newtonSymbol(n-i, k-1);
+        if(count > permutation) {
+            // TODO step through it
+            digits[k-1] = i;
+            _getPermutation(permutation-count, n-i, k-1, digits);
         }
     }
+}
+
+// unsolved yet
+void problem50() {
+    int digits[] = {0, 0, 0};
+    _getPermutation(2, 5, 1, digits);
     
-    cout << maxNumber;
+    printf("End - %d, %d, %d", digits[2], digits[1], digits[0]);
 }
 
 
