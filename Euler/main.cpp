@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <limits>
@@ -33,7 +34,7 @@ template <typename bidirectional_iterator>
 inline long toNumber(bidirectional_iterator begin, bidirectional_iterator end);
 inline bool isPrime(ulong n);
 inline unsigned long lowestDivisor(unsigned long n);
-inline long powd(long x, long power);
+static inline long powd(long x, long power);
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(*x))
 
@@ -97,7 +98,7 @@ inline unsigned long lowestDivisor(unsigned long n) {
     return n;
 }
 
-inline long powd(long x, long power) {
+static inline long powd(long x, long power) {
     long temp = x;
     
     if(power == 0) {
@@ -571,13 +572,13 @@ static ulong _factorial(ulong n) {
     return result;
 }
 
-static int _newtonSymbol(ulong n, ulong k) {
-    return (int)(_factorial(n) / (_factorial(k)*_factorial(n-k)));
+static ulong _newtonSymbol(ulong n, ulong k) {
+    return (_factorial(n) / (_factorial(k)*_factorial(n-k)));
 }
 
 /**
  *  Returns the permutation of a following form _**___*_
- * permutation - index of permutation must not be larger than (n k)-1
+ * permutation - index of permutation must not be larger than (n k) (1 - based)
  * n - total number of places _
  * k - number of elements we put there *
  * digits - returned digits - they mark empty indices counted from the right (i.e from 10^0) of digits. Must be
@@ -585,29 +586,115 @@ static int _newtonSymbol(ulong n, ulong k) {
  *     ___*** is {0,0,0}
  *     _*_*_* is {1,1,0}
  */
-static void _getPermutation(int permutation, int n, int k, int* digits) {
+static void _getPermutation(ulong permutation, ulong n, ulong k, ulong* digits) {
     if(k == 1) {
-        digits[0] = permutation;
+        digits[0] = permutation-1;
+        return;
     }
     
     // possibilities count with this rightmost position
-    int count = 0;
-    for(int i = 1; i <= k; ++i) {
-        count += _newtonSymbol(n-i, k-1);
-        if(count > permutation) {
+    ulong count = 0;
+    for(ulong i = 1; i <= k; ++i) {
+        count = _newtonSymbol(n-i, k-1);
+        if(permutation <= count) {
             // TODO step through it
-            digits[k-1] = i;
+            digits[k-1] = i-1;
             _getPermutation(permutation, n-i, k-1, digits);
+            return;
         }
+        permutation -= count;
     }
+}
+
+//static ulong _createNumber(int )
+static ulong _createNumber(ulong fixedDigits, ulong newDigit, ulong* replacements, int replacementsLength) {
+    ulong result = 0;
+    
+    ulong temp = fixedDigits;
+    
+    ulong previous = 0;
+    for(int i = replacementsLength-1; i >= 0; --i) {
+        replacements[i] += (replacementsLength-1)-i + previous;
+        previous += replacements[i];
+    }
+
+    int tableIndex = replacementsLength - 1;
+    for(ulong pow = 0; pow < fixedDigits + replacementsLength; ++pow) {
+        ulong digit = 0;
+        if(pow == replacements[tableIndex]) {
+            digit = newDigit;
+        } else {
+            digit = temp % 10;
+            temp /= 10;
+        }
+        result += digit * powd(10, pow);
+    }
+    
+    return result;
 }
 
 // unsolved yet
 void problem50() {
-    int digits[] = {0, 0, 0};
-    _getPermutation(3, 5, 3, digits);
+    //    int digits[] = {0, 0, 0};
+    //    _getPermutation(9, 5, 3, digits);
     
-    printf("End - %d, %d, %d", digits[2], digits[1], digits[0]);
+    //    printf("End - %d, %d, %d", digits[2], digits[1], digits[0]);
+    
+    const ulong targetPrimeCount = 8;
+
+    ulong digits = 2;
+    while(true) {
+        
+        for(ulong replacements = 1; replacements < digits; ++replacements) {
+            const ulong permutations = _newtonSymbol(digits, replacements);
+            ulong digitsArray[replacements];
+            
+            const ulong start = (const ulong)powd(10, digits-replacements-1);
+            const ulong end = (const ulong)powd(10, digits-replacements);
+            
+            for(ulong n = start; n < end; ++n) {
+                for(int p = 1; p <= permutations; ++p) {
+                    _getPermutation(p, digits, replacements, digitsArray);
+                    
+                    if(digitsArray[replacements-1] == 0) {
+                        // If we change the last digit it will always be not enough primes
+                        continue;
+                    }
+                    
+                    for(int i = 0; i < replacements; ++i) {
+                        printf("%lu", digitsArray[i]);
+                    }
+                    printf("\n");
+                    
+                    ulong primeCount = 0;
+                    ulong smallest = 0;
+                    
+                    for(int i = 0; i < 10; ++i)  {
+                        ulong number = _createNumber(n, i, digitsArray, replacements);
+                        printf("    %lu\n", number);
+                        if(isPrime(number)) {
+                            if(primeCount == 0) {
+                                smallest = number;
+                            }
+                            ++primeCount;
+                        }
+                        
+                        if(i == 2 && primeCount == 0) {
+                            break;
+                        }
+                    }
+                    
+                    if(primeCount == targetPrimeCount) {
+                        printf("Smallest number is %lu", smallest);
+                        return;
+                    }
+                }
+            }
+
+        }
+        
+        ++digits;
+    }
 }
 
 
