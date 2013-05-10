@@ -50,6 +50,7 @@ void problem47();
 void problem48();
 void problem49();
 void problem50();
+void problem51();
 
 int main(int argc, const char * argv[])
 {
@@ -57,7 +58,7 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem50();
+    problem51();
 }
 
 inline long toNumber(char c) {
@@ -563,6 +564,44 @@ void problem49() {
     }
 }
 
+static vector<int> _getPrimes(int upTo) {
+    vector<int> result;
+    for(int i = 2; i <= upTo; ++i) {
+        if(isPrime(i)) {
+            result.push_back(i);
+        }
+    }
+    return result;
+}
+
+void problem50() {
+    vector<int> primes = _getPrimes(MILION);
+    
+    int maxLen = numeric_limits<int>::min();
+    int maxNumber = numeric_limits<int>::min();
+    
+    int end = (int)primes.size();
+    for(int i = 0; i < primes.size(); ++i) {
+        int sum = primes[i];
+        int j = i + 1;
+        for(; j < primes.size(); ++j) {
+            sum += primes[j];
+            if(sum > MILION) {
+                break;
+            }
+            
+            if(isPrime(sum)) {
+                if(j - i > maxLen) {
+                    maxLen = j - i;
+                    maxNumber = sum;
+                }
+            }
+        }
+    }
+    
+    cout << maxNumber;
+}
+
 static ulong _factorial(ulong n) {
     ulong result = 1;
     while(n > 1) {
@@ -634,7 +673,7 @@ static ulong _createNumber(ulong fixedDigits, ulong newDigit, ulong* replacement
 }
 
 // unsolved yet
-void problem50() {
+void problem51() {
     //    int digits[] = {0, 0, 0};
     //    _getPermutation(9, 5, 3, digits);
     
