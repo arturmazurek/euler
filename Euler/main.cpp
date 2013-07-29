@@ -51,7 +51,8 @@ void problem48();
 void problem49();
 void problem50();
 void problem51();
-void problem52();    
+void problem52();
+void problem53();
 
 int main(int argc, const char * argv[])
 {
@@ -59,7 +60,7 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem52();
+    problem53();
 }
 
 inline long toNumber(char c) {
@@ -753,4 +754,25 @@ void problem52() {
         
         ++digitsCount;
     }
+}
+
+void problem53() {
+    ulong total = 0;
+    
+    for(int n = 23; n <= 100; ++n) {
+        for(int k = 1; k < n; ++k) {
+            
+            ulong sum = 1;
+            for(int i = 1; i <= k; ++i) {
+                sum *= (n - (k - i));
+                sum /= i;
+                if(sum > MILION) {
+                    ++total;
+                    break;
+                }
+            }
+        }
+    }
+    
+    std::cout << "Result: " << total << std::endl;
 }
