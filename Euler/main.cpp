@@ -749,10 +749,98 @@ static ulong _createNumber(ulong fixedDigits, ulong newDigit, ulong* replacement
 
 // returns N^K
 
+// returns true if more permutations available, false otherwise
+bool _nextPerm(vector<bool>& wildcards) {
+    unsigned overflow = 0;
+    
+    for(int i = (int)wildcards.size() - 1; i >= 0; --i) {
+        if(wildcards[i]) {
+            if(i < wildcards.size() - 1 - overflow) {
+                wildcards[i] = false;
+                ++overflow;
+                for(int j = 1; j <= overflow; ++j) {
+                    wildcards[i+j] = true;
+                }
+
+                return true;
+            } else {
+                ++overflow;
+                wildcards[i] = false;
+            }
+        }
+        
+        
+    }
+    
+    if(overflow) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+ulong _createNumber(ulong nonWildcards, const std::vector<bool>& wildcards, int wildcardNumber) {
+    ulong result = 0;
+    
+    for(ulong i = 0; i < wildcards.size(); ++i) {
+        if(wildcards[i]) {
+            result += powul(10, i) * wildcardNumber;
+        } else {
+            ulong digit = nonWildcards % 10;
+            nonWildcards /= 10;
+            
+            result += powul(10, i) * digit;
+        }
+    }
+    
+    return result;
+}
+
 void problem51() {
-    int DIGITS = 2;
-    for(ulong i = powul(10, DIGITS-1); i < powul(10, DIGITS); ++i) {
-        std::cout << i << std::endl;
+//    int DIGITS = 2;
+//    for(ulong i = powul(10, DIGITS-1); i < powul(10, DIGITS); ++i) {
+//        std::cout << i << std::endl;
+//    }
+//    vector<bool> digits = {true, true, true, false, false, false};
+//    for(auto d : digits) {
+//        std::cout << (d ? 1 : 0);
+//    }
+//    std::cout << std::endl;
+//    while(_nextPerm(digits)) {
+//        for(auto d : digits) {
+//            std::cout << (d ? 1 : 0);
+//        }
+//        std::cout << std::endl;
+//    }
+    
+    static const ulong N = 3;
+    for(int wildcardsCount = 1; wildcardsCount <= N-1; ++wildcardsCount) {
+        const int digits = N - wildcardsCount;
+        
+        const ulong start = powul(10, digits-1);
+        const ulong end = powul(10, digits);
+        
+        for(ulong i = start; i < end; ++i) {
+            vector<bool> wildcards(N, false);
+            for(int j = 0; j < wildcardsCount; ++j) {
+                wildcards[j] = true;
+            }
+            
+            do {
+//                for(auto d : wildcards) {
+//                    std::cout << (d ? 1 : 0);
+//                }
+                for(int d = wildcards.size() - 1; d >= 0; --d) {
+                    std::cout << (wildcards[d] ? 1 : 0);
+                }
+                std::cout << std::endl;
+                
+                for(int newDigit = 0; newDigit <= 9; ++newDigit) {
+                    ulong number = _createNumber(i, wildcards, newDigit);
+                    std::cout << "    " << number << std::endl;
+                }
+            } while(_nextPerm(wildcards));
+        }
     }
 }
 
