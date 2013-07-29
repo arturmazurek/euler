@@ -53,6 +53,7 @@ void problem50();
 void problem51();
 void problem52();
 void problem53();
+void problem54();
 
 int main(int argc, const char * argv[])
 {
@@ -60,7 +61,7 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem53();
+    problem54();
 }
 
 inline long toNumber(char c) {
@@ -775,4 +776,65 @@ void problem53() {
     }
     
     std::cout << "Result: " << total << std::endl;
+}
+
+struct Card {
+    char value;
+    char color;
+    
+    static bool compare(const Card& l, const Card& r) {
+        return l.value < r.value;
+    }
+};
+
+struct Hand {
+    static const int CARDS = 5;
+    
+    enum Values {
+        ONE_PAIR        = 1 << 0,
+        TWO_PAIRS       = 1 << 1,
+        THREE_OF_KIND   = 1 << 2,
+        STRAIGHT        = 1 << 3,
+        FLUSH           = 1 << 4,
+        FULL_HOUSE      = 1 << 5,
+        FOUR_OF_KIND    = 1 << 6,
+        STRAIGHT_FLUSH  = 1 << 7,
+        ROYAL_FLUSH     = 1 << 8
+    };
+    
+    Card cards[CARDS];
+    int value;
+    
+    void buildValue() {
+        
+    }
+};
+
+static Card createCard(const std::string& cardStr) {
+    Card result;
+    
+    static std::map<char, char> valuesMap {
+        {'2', 0}, {'3', 1}, {'4', 2}, {'5', 3}, {'6', 4},
+        {'7', 5}, {'8', 6}, {'9', 7}, {'T', 8}, {'J', 9},
+        {'Q', 10}, {'K', 11}, {'A', 12}
+    };
+    result.value = valuesMap[cardStr[0]];
+    result.color = cardStr[1];
+    
+    return result;
+}
+
+static Hand createHand(Card* cards) {
+    Hand result;
+    
+    memcpy(result.cards, cards, Hand::CARDS * sizeof(Card));
+    std::sort(result.cards, result.cards + Hand::CARDS, Card::compare);
+
+    result.buildValue();
+    
+    return result;
+}
+
+void problem54() {
+    
 }
