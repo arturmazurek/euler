@@ -51,6 +51,7 @@ void problem48();
 void problem49();
 void problem50();
 void problem51();
+void problem52();    
 
 int main(int argc, const char * argv[])
 {
@@ -58,14 +59,15 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem51();
+    problem52();
 }
 
 inline long toNumber(char c) {
     return c - '0';
 }
 
-inline long toNumber(const vector<int>& digits) {
+template <class ContainerT>
+inline long toNumber(ContainerT& digits) {
     return toNumber(digits.begin(), digits.end());
 }
 
@@ -77,6 +79,17 @@ inline long toNumber(bidirectional_iterator begin, bidirectional_iterator end) {
         --end;
         result += powd(10, power) * (*end);
         ++power;  
+    }
+    
+    return result;
+}
+
+std::vector<char> toDigits(ulong number) {
+    std::vector<char> result;
+    
+    while(number) {
+        result.push_back(number % 10);
+        number /= 10;
     }
     
     return result;
@@ -626,129 +639,6 @@ static ulong _newtonSymbol(ulong n, ulong k) {
     return (_factorial(n) / (_factorial(k)*_factorial(n-k)));
 }
 
-/**
- *  Returns the permutation of a following form _**___*_
- * permutation - index of permutation must not be larger than (n k) (1 - based)
- * n - total number of places _
- * k - number of elements we put there *
- * digits - returned digits - they mark empty indices counted from the right (i.e from 10^0) of digits. Must be
- *      allocated before the call and have size of k, e.g.
- *     ___*** is {0,0,0}
- *     _*_*_* is {1,1,0}
- */
-static void _getPermutation(ulong permutation, ulong n, ulong k, ulong* digits) {
-    if(k == 1) {
-        digits[0] = permutation-1;
-        return;
-    }
-    
-    // possibilities count with this rightmost position
-    ulong count = 0;
-    for(ulong i = 1; i <= k; ++i) {
-        count = _newtonSymbol(n-i, k-1);
-        if(permutation <= count) {
-            // TODO step through it
-            digits[k-1] = i-1;
-            _getPermutation(permutation, n-i, k-1, digits);
-            return;
-        }
-        permutation -= count;
-    }
-}
-
-//static ulong _createNumber(int )
-static ulong _createNumber(ulong fixedDigits, ulong newDigit, ulong* replacements, int replacementsLength) {
-    ulong result = 0;
-    
-    ulong temp = fixedDigits;
-    
-    ulong previous = 0;
-    for(int i = replacementsLength-1; i >= 0; --i) {
-        replacements[i] += (replacementsLength-1)-i + previous;
-        previous += replacements[i];
-    }
-
-    int tableIndex = replacementsLength - 1;
-    for(ulong pow = 0; pow < fixedDigits + replacementsLength; ++pow) {
-        ulong digit = 0;
-        if(pow == replacements[tableIndex]) {
-            digit = newDigit;
-        } else {
-            digit = temp % 10;
-            temp /= 10;
-        }
-        result += digit * powd(10, pow);
-    }
-    
-    return result;
-}
-
-// unsolved yet
-//void problem51() {
-//    //    int digits[] = {0, 0, 0};
-//    //    _getPermutation(9, 5, 3, digits);
-//    
-//    //    printf("End - %d, %d, %d", digits[2], digits[1], digits[0]);
-//    
-//    const ulong targetPrimeCount = 8;
-//
-//    ulong digits = 2;
-//    while(true) {
-//        
-//        for(ulong replacements = 1; replacements < digits; ++replacements) {
-//            const ulong permutations = _newtonSymbol(digits, replacements);
-//            ulong digitsArray[replacements];
-//            
-//            const ulong start = (const ulong)powd(10, digits-replacements-1);
-//            const ulong end = (const ulong)powd(10, digits-replacements);
-//            
-//            for(ulong n = start; n < end; ++n) {
-//                for(int p = 1; p <= permutations; ++p) {
-//                    _getPermutation(p, digits, replacements, digitsArray);
-//                    
-//                    if(digitsArray[replacements-1] == 0) {
-//                        // If we change the last digit it will always be not enough primes
-//                        continue;
-//                    }
-//                    
-//                    for(int i = 0; i < replacements; ++i) {
-//                        printf("%lu", digitsArray[i]);
-//                    }
-//                    printf("\n");
-//                    
-//                    ulong primeCount = 0;
-//                    ulong smallest = 0;
-//                    
-//                    for(int i = 0; i < 10; ++i)  {
-//                        ulong number = _createNumber(n, i, digitsArray, replacements);
-//                        printf("    %lu\n", number);
-//                        if(isPrime(number)) {
-//                            if(primeCount == 0) {
-//                                smallest = number;
-//                            }
-//                            ++primeCount;
-//                        }
-//                        
-//                        if(i == 2 && primeCount == 0) {
-//                            break;
-//                        }
-//                    }
-//                    
-//                    if(primeCount == targetPrimeCount) {
-//                        printf("Smallest number is %lu", smallest);
-//                        return;
-//                    }
-//                }
-//            }
-//
-//        }
-//        
-//        ++digits;
-//    }
-//}
-
-// returns N^K
-
 // returns true if more permutations available, false otherwise
 bool _nextPerm(vector<bool>& wildcards) {
     unsigned overflow = 0;
@@ -796,24 +686,8 @@ ulong _createNumber(ulong nonWildcards, const std::vector<bool>& wildcards, int 
     return result;
 }
 
-void problem51() {
-//    int DIGITS = 2;
-//    for(ulong i = powul(10, DIGITS-1); i < powul(10, DIGITS); ++i) {
-//        std::cout << i << std::endl;
-//    }
-//    vector<bool> digits = {true, true, true, false, false, false};
-//    for(auto d : digits) {
-//        std::cout << (d ? 1 : 0);
-//    }
-//    std::cout << std::endl;
-//    while(_nextPerm(digits)) {
-//        for(auto d : digits) {
-//            std::cout << (d ? 1 : 0);
-//        }
-//        std::cout << std::endl;
-//    }
-    
-    static const ulong N = 3;
+void problem51() {    
+    static const ulong N = 6;
     for(int wildcardsCount = 1; wildcardsCount <= N-1; ++wildcardsCount) {
         const int digits = N - wildcardsCount;
         
@@ -827,21 +701,56 @@ void problem51() {
             }
             
             do {
-//                for(auto d : wildcards) {
-//                    std::cout << (d ? 1 : 0);
-//                }
-                for(int d = wildcards.size() - 1; d >= 0; --d) {
-                    std::cout << (wildcards[d] ? 1 : 0);
-                }
-                std::cout << std::endl;
-                
+                int primeCount = 0;
                 for(int newDigit = 0; newDigit <= 9; ++newDigit) {
-                    ulong number = _createNumber(i, wildcards, newDigit);
-                    std::cout << "    " << number << std::endl;
+                    if(newDigit == 0 && wildcards[wildcards.size()-1]) {
+                        continue;
+                    }
+                    
+                    if(isPrime(_createNumber(i, wildcards, newDigit))) {
+                        ++primeCount;
+                    }
                 }
+
+                if(primeCount == 8) {
+                    int newDigit = wildcards[wildcards.size()-1] ? 1 : 0;
+                    std::cout << "Found answer: " << _createNumber(i, wildcards, newDigit);
+                    return;
+                }
+            
             } while(_nextPerm(wildcards));
         }
     }
+    
+    std::cout << "No answer" << std::endl;
 }
 
-
+void problem52() {
+    int digitsCount = 2;
+    while(true) {
+        ulong start = powul(10, digitsCount-1);
+        ulong end = powul(10, digitsCount) / 6 + 1;
+    
+        for(ulong i = start; i <= end; ++i) {
+            auto digits = toDigits(i);
+            std::sort(digits.begin(), digits.end());
+            
+            for(int mult = 2; mult <= 6; ++mult) {
+                ulong newNumber = i * mult;
+                auto newDigits = toDigits(newNumber);
+                std::sort(newDigits.begin(), newDigits.end());
+                
+                if(newDigits != digits) {
+                    break;
+                } else {
+                    if(mult == 6) {
+                        std::cout << "Found: " << i << std::endl;
+                        return;
+                    }
+                }
+            }
+        }
+        
+        ++digitsCount;
+    }
+}
