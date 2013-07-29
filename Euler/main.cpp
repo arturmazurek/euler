@@ -111,6 +111,18 @@ static inline long powd(long x, long power) {
     return temp;
 }
 
+static inline long powul(ulong x, ulong power) {
+    ulong temp = x;
+    
+    if(power == 0) {
+        return 1;
+    }
+    while(--power) {
+        temp *= x;
+    }
+    return temp;
+}
+
 void _fillWithTriangles(const int p, map<int, int>& count) {
     if(p == 3) {
         return;
@@ -580,7 +592,6 @@ void problem50() {
     int maxLen = numeric_limits<int>::min();
     int maxNumber = numeric_limits<int>::min();
     
-    int end = (int)primes.size();
     for(int i = 0; i < primes.size(); ++i) {
         int sum = primes[i];
         int j = i + 1;
@@ -673,66 +684,75 @@ static ulong _createNumber(ulong fixedDigits, ulong newDigit, ulong* replacement
 }
 
 // unsolved yet
+//void problem51() {
+//    //    int digits[] = {0, 0, 0};
+//    //    _getPermutation(9, 5, 3, digits);
+//    
+//    //    printf("End - %d, %d, %d", digits[2], digits[1], digits[0]);
+//    
+//    const ulong targetPrimeCount = 8;
+//
+//    ulong digits = 2;
+//    while(true) {
+//        
+//        for(ulong replacements = 1; replacements < digits; ++replacements) {
+//            const ulong permutations = _newtonSymbol(digits, replacements);
+//            ulong digitsArray[replacements];
+//            
+//            const ulong start = (const ulong)powd(10, digits-replacements-1);
+//            const ulong end = (const ulong)powd(10, digits-replacements);
+//            
+//            for(ulong n = start; n < end; ++n) {
+//                for(int p = 1; p <= permutations; ++p) {
+//                    _getPermutation(p, digits, replacements, digitsArray);
+//                    
+//                    if(digitsArray[replacements-1] == 0) {
+//                        // If we change the last digit it will always be not enough primes
+//                        continue;
+//                    }
+//                    
+//                    for(int i = 0; i < replacements; ++i) {
+//                        printf("%lu", digitsArray[i]);
+//                    }
+//                    printf("\n");
+//                    
+//                    ulong primeCount = 0;
+//                    ulong smallest = 0;
+//                    
+//                    for(int i = 0; i < 10; ++i)  {
+//                        ulong number = _createNumber(n, i, digitsArray, replacements);
+//                        printf("    %lu\n", number);
+//                        if(isPrime(number)) {
+//                            if(primeCount == 0) {
+//                                smallest = number;
+//                            }
+//                            ++primeCount;
+//                        }
+//                        
+//                        if(i == 2 && primeCount == 0) {
+//                            break;
+//                        }
+//                    }
+//                    
+//                    if(primeCount == targetPrimeCount) {
+//                        printf("Smallest number is %lu", smallest);
+//                        return;
+//                    }
+//                }
+//            }
+//
+//        }
+//        
+//        ++digits;
+//    }
+//}
+
+// returns N^K
+
 void problem51() {
-    //    int digits[] = {0, 0, 0};
-    //    _getPermutation(9, 5, 3, digits);
-    
-    //    printf("End - %d, %d, %d", digits[2], digits[1], digits[0]);
-    
-    const ulong targetPrimeCount = 8;
-
-    ulong digits = 2;
-    while(true) {
-        
-        for(ulong replacements = 1; replacements < digits; ++replacements) {
-            const ulong permutations = _newtonSymbol(digits, replacements);
-            ulong digitsArray[replacements];
-            
-            const ulong start = (const ulong)powd(10, digits-replacements-1);
-            const ulong end = (const ulong)powd(10, digits-replacements);
-            
-            for(ulong n = start; n < end; ++n) {
-                for(int p = 1; p <= permutations; ++p) {
-                    _getPermutation(p, digits, replacements, digitsArray);
-                    
-                    if(digitsArray[replacements-1] == 0) {
-                        // If we change the last digit it will always be not enough primes
-                        continue;
-                    }
-                    
-                    for(int i = 0; i < replacements; ++i) {
-                        printf("%lu", digitsArray[i]);
-                    }
-                    printf("\n");
-                    
-                    ulong primeCount = 0;
-                    ulong smallest = 0;
-                    
-                    for(int i = 0; i < 10; ++i)  {
-                        ulong number = _createNumber(n, i, digitsArray, replacements);
-                        printf("    %lu\n", number);
-                        if(isPrime(number)) {
-                            if(primeCount == 0) {
-                                smallest = number;
-                            }
-                            ++primeCount;
-                        }
-                        
-                        if(i == 2 && primeCount == 0) {
-                            break;
-                        }
-                    }
-                    
-                    if(primeCount == targetPrimeCount) {
-                        printf("Smallest number is %lu", smallest);
-                        return;
-                    }
-                }
-            }
-
-        }
-        
-        ++digits;
+    int DIGITS = 2;
+    for(ulong i = powul(10, DIGITS-1); i < powul(10, DIGITS); ++i) {
+        std::cout << i << std::endl;
     }
 }
 
