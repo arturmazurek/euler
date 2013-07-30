@@ -895,6 +895,26 @@ struct Hand {
             value |= ROYAL_FLUSH;
         }
     }
+    
+    bool wins(const Hand& other) {
+        if(value > other.value) {
+            return true;
+        }
+        
+        if(value < other.value) {
+            return false;
+        }
+        
+        for(int i = CARDS; i >= 0; --i) {
+            if(cards[i].value > other.cards[i].value) {
+                return true;
+            } else if(cards[i].value < other.cards[i].value) {
+                return false;
+            }
+        }
+        
+        return false;
+    }
 };
 
 static Card createCard(const std::string& cardStr) {
@@ -923,32 +943,57 @@ static Hand createHand(Card* cards) {
 }
 
 void problem54() {
-    std::string test = "5H 5C 6S 7S KD 2C 3S 8S 8D TD";
-    test = "5D 8C 9S JS AC 2C 5C 7D 8S QH";
-    test = "2D 9C AS AH AC 3D 6D 7D TD QD";
-    test = "4D 6S 9H QH QC 3D 6D 7H QD QS";
-    test = "2H 2D 4C 4D 4S 3C 3D 3S 9S 9D";
-    std::stringstream ss(test);
+    auto test1 = "5H 5C 6S 7S KD 2C 3S 8S 8D TD";
+    auto test2 = "5D 8C 9S JS AC 2C 5C 7D 8S QH";
+    auto test3 = "2D 9C AS AH AC 3D 6D 7D TD QD";
+    auto test4 = "4D 6S 9H QH QC 3D 6D 7H QD QS";
+    auto test5 = "2H 2D 4C 4D 4S 3C 3D 3S 9S 9D";
+//    std::stringstream ss(test);
+//    
+//    Hand h1;
+//    Hand h2;
+//    
+//    Card cards[Hand::CARDS];
+//    for(int i = 0; i < Hand::CARDS; ++i) {
+//        std::string hStr;
+//        ss >> hStr;
+//        
+//        cards[i] = createCard(hStr);
+//    }
+//    h1 = createHand(cards);
+//    
+//    for(int i = 0; i < Hand::CARDS; ++i) {
+//        std::string hStr;
+//        ss >> hStr;
+//        
+//        cards[i] = createCard(hStr);
+//    }
+//    h2 = createHand(cards);
+//    
+//    std::cout << "End" << std::endl;
+    int result = 0;
     
-    Hand h1;
-    Hand h2;
+    std::string line;
+    line = test1;
     
-    Card cards[Hand::CARDS];
-    for(int i = 0; i < Hand::CARDS; ++i) {
-        std::string hStr;
-        ss >> hStr;
+//    while (getline(std::cin, line)) {
+        std::stringstream ss(line);
         
-        cards[i] = createCard(hStr);
-    }
-    h1 = createHand(cards);
+        Card cards[2*Hand::CARDS];
+        for(int i = 0; i < 2*Hand::CARDS; ++i) {
+            std::string hStr;
+            ss >> hStr;
+            
+            cards[i] = createCard(hStr);
+        }
     
-    for(int i = 0; i < Hand::CARDS; ++i) {
-        std::string hStr;
-        ss >> hStr;
+        Hand h1 = createHand(cards);
+        Hand h2 = createHand(cards + Hand::CARDS);
         
-        cards[i] = createCard(hStr);
-    }
-    h2 = createHand(cards);
+        if(h1.wins(h2)) {
+            ++result;
+        }
+//    }
     
-    std::cout << "End" << std::endl;
+    std::cout << "Result: " << result << std::endl;
 }
