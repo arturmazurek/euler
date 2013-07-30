@@ -789,6 +789,7 @@ struct Card {
 
 struct Hand {
     static const int CARDS = 5;
+    static const int MAX_VALUE = 12;
     
     enum Values {
         ONE_PAIR        = 1 << 0,
@@ -806,7 +807,93 @@ struct Hand {
     int value;
     
     void buildValue() {
+        value = 0;
+        checkRepeats();
+        checkStraight();
+        checkFlush();
+        checkStraightFlush();
+        checkRoyalFlush();
+    }
+    
+    void checkRepeats() {
+        char previousValue = cards[0].value;
+        int count = 1;
         
+        for(int i = 1; i < CARDS; ++i) {
+            if(cards[i].value == previousValue) {
+                ++count;
+            } else {
+                count = 1;
+                previousValue = cards[i].value;
+                continue;
+            }
+            
+            if(count == 2) {
+                if(value & THREE_OF_KIND) {
+                    value &= !THREE_OF_KIND;
+                    value |= FULL_HOUSE;
+                } else if(value & ONE_PAIR) {
+                    // kind of a look-ahead
+                    if(i != CARDS && cards[i+1].value != previousValue) {
+                        value &= !ONE_PAIR;
+                        value |= TWO_PAIRS;
+                    }
+                } else {
+                    if(i != CARDS && cards[i+1].value != previousValue) {
+                        value |= ONE_PAIR;
+                    }
+                }
+            } else if(count == 3) {
+                if(value & ONE_PAIR) {
+                    value &= !ONE_PAIR;
+                    value |= FULL_HOUSE;
+                } else {
+                    value |= THREE_OF_KIND;
+                }
+            } else if(count == 4) {
+                value |= FOUR_OF_KIND;
+            }
+        }
+    }
+    
+    void checkStraight() {
+        for(int i = 1; i < CARDS; ++i) {
+            if(cards[i].value != (cards[i-1].value + 1)) {
+                return;
+            }
+        }
+        
+        value |= STRAIGHT;
+    }
+    
+    void checkFlush() {
+        char color = cards[0].color;
+        for(int i = 1; i < CARDS; ++i) {
+            if(cards[i].color != color) {
+                return;
+            }
+        }
+        
+        value |= FLUSH;
+    }
+    
+    void checkStraightFlush() {
+        if((value & STRAIGHT) && (value && FLUSH)) {
+            value |= STRAIGHT_FLUSH;
+            value |= !STRAIGHT;
+            value |= !FLUSH;
+        }
+    }
+    
+    void checkRoyalFlush() {
+        if(!(value & FLUSH)) {
+            return;
+        }
+        
+        if(cards[CARDS - 1].value == MAX_VALUE) {
+            value &= !FLUSH;
+            value |= ROYAL_FLUSH;
+        }
     }
 };
 
@@ -836,5 +923,32 @@ static Hand createHand(Card* cards) {
 }
 
 void problem54() {
+    std::string test = "5H 5C 6S 7S KD 2C 3S 8S 8D TD";
+    test = "5D 8C 9S JS AC 2C 5C 7D 8S QH";
+    test = "2D 9C AS AH AC 3D 6D 7D TD QD";
+    test = "4D 6S 9H QH QC 3D 6D 7H QD QS";
+    test = "2H 2D 4C 4D 4S 3C 3D 3S 9S 9D";
+    std::stringstream ss(test);
     
+    Hand h1;
+    Hand h2;
+    
+    Card cards[Hand::CARDS];
+    for(int i = 0; i < Hand::CARDS; ++i) {
+        std::string hStr;
+        ss >> hStr;
+        
+        cards[i] = createCard(hStr);
+    }
+    h1 = createHand(cards);
+    
+    for(int i = 0; i < Hand::CARDS; ++i) {
+        std::string hStr;
+        ss >> hStr;
+        
+        cards[i] = createCard(hStr);
+    }
+    h2 = createHand(cards);
+    
+    std::cout << "End" << std::endl;
 }
