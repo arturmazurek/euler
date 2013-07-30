@@ -983,39 +983,11 @@ static Hand createHand(Card* cards) {
     return result;
 }
 
+// g++ Euler/main.cpp -o main -std=c++11 -stdlib=libc++; ./main < poker.txt
 void problem54() {
-    auto test1 = "5H 5C 6S 7S KD 2C 3S 8S 8D TD";
-    auto test2 = "5D 8C 9S JS AC 2C 5C 7D 8S QH";
-    auto test3 = "2D 9C AS AH AC 3D 6D 7D TD QD";
-    auto test4 = "4D 6S 9H QH QC 3D 6D 7H QD QS";
-    auto test5 = "2H 2D 4C 4D 4S 3C 3D 3S 9S 9D";
-//    std::stringstream ss(test);
-//    
-//    Hand h1;
-//    Hand h2;
-//    
-//    Card cards[Hand::CARDS];
-//    for(int i = 0; i < Hand::CARDS; ++i) {
-//        std::string hStr;
-//        ss >> hStr;
-//        
-//        cards[i] = createCard(hStr);
-//    }
-//    h1 = createHand(cards);
-//    
-//    for(int i = 0; i < Hand::CARDS; ++i) {
-//        std::string hStr;
-//        ss >> hStr;
-//        
-//        cards[i] = createCard(hStr);
-//    }
-//    h2 = createHand(cards);
-//    
-//    std::cout << "End" << std::endl;
     int result = 0;
     
     std::string line;
-//    line = test1;
     
     while (getline(std::cin, line)) {
         std::stringstream ss(line);
