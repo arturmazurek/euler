@@ -806,8 +806,12 @@ struct Hand {
     Card cards[CARDS];
     int value;
     
+    char rankValues[2];
+    
     void buildValue() {
         value = 0;
+        rankValues[0] = rankValues[1] = 0;
+        
         checkRepeats();
         checkStraight();
         checkFlush();
@@ -832,26 +836,39 @@ struct Hand {
                 if(value & THREE_OF_KIND) {
                     value &= !THREE_OF_KIND;
                     value |= FULL_HOUSE;
+                    
+                    rankValues[1] = cards[i].value;
                 } else if(value & ONE_PAIR) {
                     // kind of a look-ahead
                     if(i != CARDS && cards[i+1].value != previousValue) {
                         value &= !ONE_PAIR;
                         value |= TWO_PAIRS;
+                        
+                        rankValues[0] = cards[i].value;
                     }
                 } else {
                     if(i != CARDS && cards[i+1].value != previousValue) {
                         value |= ONE_PAIR;
+                        
+                        rankValues[0] = cards[i].value;
                     }
                 }
             } else if(count == 3) {
                 if(value & ONE_PAIR) {
                     value &= !ONE_PAIR;
                     value |= FULL_HOUSE;
+                    
+                    rankValues[1] = rankValues[0];
+                    rankValues[0] = cards[i].value;
                 } else {
                     value |= THREE_OF_KIND;
+                    
+                    rankValues[0] = cards[i].value;
                 }
             } else if(count == 4) {
                 value |= FOUR_OF_KIND;
+                
+                rankValues[0] = cards[i].value;
             }
         }
     }
@@ -864,6 +881,7 @@ struct Hand {
         }
         
         value |= STRAIGHT;
+        rankValues[0] = rankValues[1] = 0;
     }
     
     void checkFlush() {
@@ -875,6 +893,7 @@ struct Hand {
         }
         
         value |= FLUSH;
+        rankValues[0] = rankValues[1] = 0;
     }
     
     void checkStraightFlush() {
@@ -882,7 +901,10 @@ struct Hand {
             value |= STRAIGHT_FLUSH;
             value |= !STRAIGHT;
             value |= !FLUSH;
+            
+            rankValues[0] = rankValues[1] = 0;
         }
+        
     }
     
     void checkRoyalFlush() {
@@ -893,7 +915,9 @@ struct Hand {
         if(cards[CARDS - 1].value == MAX_VALUE) {
             value &= !FLUSH;
             value |= ROYAL_FLUSH;
+            rankValues[0] = rankValues[1] = 0;
         }
+        
     }
     
     bool wins(const Hand& other) {
@@ -903,6 +927,23 @@ struct Hand {
         
         if(value < other.value) {
             return false;
+        }
+        
+        if(rankValues[0] || other.rankValues[0]) {
+            if(rankValues[0] < other.rankValues[0]) {
+                return false;
+            }
+            if(rankValues[0] > other.rankValues[0]) {
+                return true;
+            }
+            
+            if(rankValues[1] < other.rankValues[1]) {
+                return false;
+            }
+            
+            if(rankValues[1] > other.rankValues[1]) {
+                return true;
+            }
         }
         
         for(int i = CARDS; i >= 0; --i) {
@@ -974,9 +1015,9 @@ void problem54() {
     int result = 0;
     
     std::string line;
-    line = test1;
+//    line = test1;
     
-//    while (getline(std::cin, line)) {
+    while (getline(std::cin, line)) {
         std::stringstream ss(line);
         
         Card cards[2*Hand::CARDS];
@@ -993,7 +1034,7 @@ void problem54() {
         if(h1.wins(h2)) {
             ++result;
         }
-//    }
-    
+    }
+
     std::cout << "Result: " << result << std::endl;
 }
