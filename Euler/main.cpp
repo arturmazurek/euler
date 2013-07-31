@@ -1067,17 +1067,55 @@ void problem55() {
     std::cout << "Result: " << result << std::endl;
 }
 
-void calcPower(std::vector<char>** memos, int a, int b) {
+static const vector<char> multiply(const vector<char>& a, const vector<char>& b) {
+    // XXX: todo
+//    std::vector<char> result;
+//    
+//    char overflow = 0;
+//    int i = 0;
+//    for(; i < a.size() && i < b.size(); ++i) {
+//        overflow += a[i] * b[i];
+//        result.push_back(overflow % 10);
+//        overflow /= 10;
+//    }
+//    
+//    if(overflow) {
+//        result.push_back(overflow);
+//    }
+//    
+//    return result;
+}
+
+static const vector<char> power(ulong a, ulong b) {
+    auto result = toDigits(a);
+    auto bDigits = toDigits(b);
+    
+    for(int i = 2; i < b; ++i) {
+        result = multiply(result, bDigits);
+    }
+    
+    return result;
+}
+
+const vector<char>& calcPower(std::vector<char>** memos, const int a, const int b) {
     if(memos[a][b].size()) {
-        return;
+        return memos[a][b];
     }
     if(a == 1) {
         memos[a][b] = {1};
-        return;
+        return memos[a][b];
     }
     if(b == 1) {
         memos[a][b] = toDigits(a);
-        return;
+        return memos[a][b];
+    }
+    
+    int lowestDivisorA = static_cast<int>(lowestDivisor(a));
+    int lowestDivisorB = static_cast<int>(lowestDivisor(b));
+    
+    if(lowestDivisorA == a && lowestDivisorB == b) {
+        memos[a][b] = power(a, b);
+        return memos[a][b];
     }
     
     int originalA = a;
