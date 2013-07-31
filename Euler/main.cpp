@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <deque>
 #include <iostream>
 #include <fstream>
 #include <limits>
@@ -54,6 +55,7 @@ void problem51();
 void problem52();
 void problem53();
 void problem54();
+void problem55();
 
 int main(int argc, const char * argv[])
 {
@@ -61,7 +63,7 @@ int main(int argc, const char * argv[])
 //    getcwd(path, sizeof(path));
 //    cout << path << endl;
     
-    problem54();
+    problem55();
 }
 
 inline long toNumber(char c) {
@@ -1010,3 +1012,63 @@ void problem54() {
 
     std::cout << "Result: " << result << std::endl;
 }
+
+static bool isPalindrome(const std::vector<char>& number) {
+    for(int i = 0, j = ((int)number.size() - 1); j > i; ++i, --j) {
+        if(number[i] != number[j]) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+static const vector<char> add(const vector<char>& a, const vector<char>& b) {
+    std::vector<char> result;
+    
+    char overflow = 0;
+    for(int i = 0; i < a.size(); ++i) {
+        overflow += a[i] + b[i];
+        result.push_back(overflow % 10);
+        overflow /= 10;
+    }
+    
+    if(overflow) {
+        result.push_back(overflow);
+    }
+    
+    return result;
+}
+
+static bool isLychrel(int n) {
+    auto digits = toDigits(n);
+    for(int i = 0; i < 50; ++i) {
+        auto reversed = digits;
+        std::reverse(reversed.begin(), reversed.end());
+        
+        digits = add(digits, reversed);
+        
+        if(isPalindrome(digits)) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+void problem55() {
+    int result = 0;
+    
+    static const int N = 10000;
+    for(int n = 1; n < N; ++n) {
+        
+        if(isLychrel(n)) {
+            ++result;
+        }
+    }
+    
+    std::cout << "Result: " << result << std::endl;
+}
+
+
+
