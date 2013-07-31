@@ -57,10 +57,11 @@ void problem53();
 void problem54();
 void problem55();
 void problem56();
+void problem57();
 
 int main(int argc, const char * argv[])
 {    
-    problem56();
+    problem57();
 }
 
 inline long toNumber(char c) {
@@ -1021,11 +1022,15 @@ static bool isPalindrome(const std::vector<char>& number) {
 }
 
 static const vector<char> add(const vector<char>& a, const vector<char>& b) {
-    std::vector<char> result;
+    vector<char> result;
     
     char overflow = 0;
-    for(int i = 0; i < a.size(); ++i) {
-        overflow += a[i] + b[i];
+    
+    auto end = max(a.size(), b.size());
+    for(int i = 0; i < end; ++i) {
+        overflow += i < a.size() ? a[i] : 0;
+        overflow += i < b.size() ? b[i] : 0;
+        
         result.push_back(overflow % 10);
         overflow /= 10;
     }
@@ -1084,54 +1089,50 @@ static const vector<char> multiply(const vector<char>& a, const vector<char>& b)
 //    }
 //    
 //    return result;
-}
 
-static const vector<char> power(ulong a, ulong b) {
-    auto result = toDigits(a);
-    auto bDigits = toDigits(b);
+    vector<char> result;
     
-    for(int i = 2; i < b; ++i) {
-        result = multiply(result, bDigits);
+    for(int i = 0; i < a.size(); ++i) {
+        vector<char> temp(i, 0);
+        char overflow = 0;
+        
+        for(int j = 0; j < b.size(); ++j) {
+            overflow += a[i] * b[j];
+            temp.push_back(overflow % 10);
+            overflow /= 10;
+        }
+        
+        if(overflow) {
+            temp.push_back(overflow);
+        }
+        
+        result = add(result, temp);
     }
     
     return result;
 }
 
-const vector<char>& calcPower(std::vector<char>** memos, const int a, const int b) {
-    if(memos[a][b].size()) {
-        return memos[a][b];
-    }
-    if(a == 1) {
-        memos[a][b] = {1};
-        return memos[a][b];
-    }
-    if(b == 1) {
-        memos[a][b] = toDigits(a);
-        return memos[a][b];
-    }
-    
-    int lowestDivisorA = static_cast<int>(lowestDivisor(a));
-    int lowestDivisorB = static_cast<int>(lowestDivisor(b));
-    
-    if(lowestDivisorA == a && lowestDivisorB == b) {
-        memos[a][b] = power(a, b);
-        return memos[a][b];
-    }
-    
-    int originalA = a;
-    int originalB = b;
-    
-    //xxx tutaj
-}
-
 void problem56() {
     static const int N = 100;
-    std::vector<char> memos[N][N];
+    ulong max = 0;
     
-    for(int a = 1; a < N; ++a) {
-        for(int b = 1; b < N; ++b) {
-            calcPower((std::vector<char>**)memos, a, b);
+    for(int a = 2; a < N; ++a) {        
+        auto digits = toDigits(a);
+        
+        for(int b = 2; b < N; ++b) {
+            digits = multiply(digits, toDigits(a));
+            
+            ulong tempSum = 0;
+            for(const auto& digit : digits) {
+                tempSum += digit;
+            }
+            max = std::max(max, tempSum);
         }
     }
+    
+    cout << "Result: " << max << endl;
 }
 
+void problem57() {
+    
+}
