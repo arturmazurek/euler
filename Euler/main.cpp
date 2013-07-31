@@ -56,14 +56,11 @@ void problem52();
 void problem53();
 void problem54();
 void problem55();
+void problem56();
 
 int main(int argc, const char * argv[])
-{
-//    char path[1024];
-//    getcwd(path, sizeof(path));
-//    cout << path << endl;
-    
-    problem55();
+{    
+    problem56();
 }
 
 inline long toNumber(char c) {
@@ -1070,5 +1067,33 @@ void problem55() {
     std::cout << "Result: " << result << std::endl;
 }
 
+void calcPower(std::vector<char>** memos, int a, int b) {
+    if(memos[a][b].size()) {
+        return;
+    }
+    if(a == 1) {
+        memos[a][b] = {1};
+        return;
+    }
+    if(b == 1) {
+        memos[a][b] = toDigits(a);
+        return;
+    }
+    
+    int originalA = a;
+    int originalB = b;
+    
+    //xxx tutaj
+}
 
+void problem56() {
+    static const int N = 100;
+    std::vector<char> memos[N][N];
+    
+    for(int a = 1; a < N; ++a) {
+        for(int b = 1; b < N; ++b) {
+            calcPower((std::vector<char>**)memos, a, b);
+        }
+    }
+}
 
