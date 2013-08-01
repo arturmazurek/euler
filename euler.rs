@@ -8,7 +8,7 @@ fn problem1() {
 		}
 
 		i += 1;
-		if(i == 10000) {
+		if(i == 1000) {
 			break;
 		}
 	}
