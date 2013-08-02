@@ -23,6 +23,8 @@
 
 #include "unistd.h"
 
+#include "BigNumber.h"
+
 using namespace std;
 
 static const int MILION = 1000000;
@@ -1134,5 +1136,20 @@ void problem56() {
 }
 
 void problem57() {
+    int result = 0;
     
+    BigNumber nom = 3;
+    BigNumber denom = 2;
+    
+    for(int i = 2; i <= 1000; ++i) {
+        nom += denom;
+        swap(nom, denom);
+        nom += denom;
+        
+        if(nom.digits() > denom.digits()) {
+            result += 1;
+        }
+    }
+    
+    cout << "Result: " << result << endl;
 }
