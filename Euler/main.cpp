@@ -23,6 +23,8 @@
 
 #include "unistd.h"
 
+#include "BigNumber.h"
+
 using namespace std;
 
 static const int MILION = 1000000;
@@ -58,10 +60,11 @@ void problem54();
 void problem55();
 void problem56();
 void problem57();
+void problem58();
 
 int main(int argc, const char * argv[])
 {    
-    problem57();
+    problem58();
 }
 
 inline long toNumber(char c) {
@@ -1134,5 +1137,50 @@ void problem56() {
 }
 
 void problem57() {
+    int result = 0;
     
+    BigNumber nom = 3;
+    BigNumber denom = 2;
+    
+    for(int i = 2; i <= 1000; ++i) {
+        nom += denom;
+        swap(nom, denom);
+        nom += denom;
+        
+        if(nom.digits() > denom.digits()) {
+            result += 1;
+        }
+    }
+    
+    cout << "Result: " << result << endl;
+}
+
+void problem58() {
+    ulong result = 0;
+    
+    int all = 1; // 1 is for 1
+    int prime = 0;
+    
+    for(int i = 2; ; ++i) {
+        ulong end = (2*i - 1)*(2*i - 1);
+        ulong start = (2*i - 3)*(2*i - 3) + 1;
+        
+        ulong mod = (end - start + 1) / 4;
+        
+        for(ulong n = start; n <= end; ++n) {
+            if((n - start + 1) % mod == 0) {
+                ++all;
+                if(isPrime(n)) {
+                    ++prime;
+                }
+            }
+        }
+        
+        if(prime * 10 < all) {
+            result = mod + 1;
+            break;
+        }
+    }
+    
+    cout << "Result: " << result;
 }

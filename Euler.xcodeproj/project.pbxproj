@@ -30,6 +30,7 @@
 		6D89DC8015D3CAD600C5ED6E /* Euler.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Euler.1; sourceTree = "<group>"; };
 		6DC1E7CE15D3FF98004EB36D /* words.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words.txt; sourceTree = "<group>"; };
 		7551ABC017A706B00091A899 /* poker.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = poker.txt; sourceTree = "<group>"; };
+		86D2848C17ABE67100660CC3 /* BigNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumber.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +67,7 @@
 			children = (
 				6D89DC7E15D3CAD600C5ED6E /* main.cpp */,
 				6D89DC8015D3CAD600C5ED6E /* Euler.1 */,
+				86D2848C17ABE67100660CC3 /* BigNumber.h */,
 			);
 			path = Euler;
 			sourceTree = "<group>";
