@@ -61,10 +61,11 @@ void problem55();
 void problem56();
 void problem57();
 void problem58();
+void problem59();
 
 int main(int argc, const char * argv[])
 {    
-    problem58();
+    problem59();
 }
 
 inline long toNumber(char c) {
@@ -1183,4 +1184,65 @@ void problem58() {
     }
     
     cout << "Result: " << result;
+}
+
+// g++ Euler/main.cpp -o main -std=c++11 -stdlib=libc++; ./main < cipher1.txt
+void problem59() {
+    int possibleKeysCount = 0;
+    
+    string cipher;
+    cin >> cipher;
+    
+    vector<unsigned char> chars;
+    unsigned char temp = 0;
+    
+    for(auto c : cipher) {
+        if(c == ',') {
+            chars.push_back(temp);
+            temp = 0;
+        } else if(c >= '0' && c <= '9') {
+            temp *= 10;
+            temp += c - '0';
+        }
+    }
+    chars.push_back(temp);
+    
+    // Todo try with frequency analysis
+//    for(unsigned char key1 = 'a'; key1 <= 'z'; ++key1) {
+//        for(unsigned char key2 = 'a'; key2 <= 'z'; ++key2) {
+//            for(unsigned char key3 = 'a'; key3 <= 'z'; ++key3) {
+//                unsigned char key[] = {key1, key2, key3, 0};
+//                bool possible = true;
+//                
+//                for(int i = 0; i < chars.size(); ++i) {
+//                    char plainChar = chars[i] ^ key[i % 3];
+//                    if((plainChar >='a' && plainChar <= 'z') || (plainChar >= 'A' && plainChar <= 'Z') || plainChar == ' ') {
+//                        cout << plainChar;
+//                    } else {
+//                        possible = false;
+//                    }
+//                }
+//                
+//                cout << " END! - " << key << endl;
+//                
+//                if(possible) {
+//                    ++possibleKeysCount;
+//                    cout << "Possible key: " << key << endl;
+//                }
+//            }
+//        }
+//    }
+//    
+//    cout << "Possible keys count: " << possibleKeysCount << endl;
+    
+    int result = 0;
+    
+    std::string key = "god"; // but this is the key :)
+    for(int i = 0; i < chars.size(); ++i) {
+        char plain = chars[i] ^ key[i % 3];
+        cout << plain;
+        result += plain;
+    }
+    
+    cout << endl << "Result is: " << result << endl;
 }
