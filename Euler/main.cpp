@@ -26,6 +26,7 @@
 #include "unistd.h"
 
 #include "BigNumber.h"
+#include "tests.h"
 #include "util.h"
 
 using namespace std;
@@ -66,7 +67,10 @@ void problem59();
 void problem60();
 
 int main(int argc, const char * argv[])
-{    
+{
+#ifdef DEBUG
+    runTests();
+#endif
     problem60();
 }
 
