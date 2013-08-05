@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6D89DC7F15D3CAD600C5ED6E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D89DC7E15D3CAD600C5ED6E /* main.cpp */; };
 		6D89DC8115D3CAD600C5ED6E /* Euler.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D89DC8015D3CAD600C5ED6E /* Euler.1 */; };
+		75323F9917B03F99005A477F /* BigNumber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75323F9817B03F99005A477F /* BigNumber.cpp */; };
 		867A03D317B00090003802AC /* tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 867A03D117B0008F003802AC /* tests.cpp */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,7 @@
 		6D89DC7E15D3CAD600C5ED6E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		6D89DC8015D3CAD600C5ED6E /* Euler.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Euler.1; sourceTree = "<group>"; };
 		6DC1E7CE15D3FF98004EB36D /* words.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words.txt; sourceTree = "<group>"; };
+		75323F9817B03F99005A477F /* BigNumber.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BigNumber.cpp; sourceTree = "<group>"; };
 		7551ABC017A706B00091A899 /* poker.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = poker.txt; sourceTree = "<group>"; };
 		8624BC4E17AFE03B00921CBB /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		867A03D117B0008F003802AC /* tests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tests.cpp; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				8624BC4E17AFE03B00921CBB /* util.h */,
 				867A03D117B0008F003802AC /* tests.cpp */,
 				867A03D217B00090003802AC /* tests.h */,
+				75323F9817B03F99005A477F /* BigNumber.cpp */,
 			);
 			path = Euler;
 			sourceTree = "<group>";
@@ -132,6 +135,7 @@
 			files = (
 				6D89DC7F15D3CAD600C5ED6E /* main.cpp in Sources */,
 				867A03D317B00090003802AC /* tests.cpp in Sources */,
+				75323F9917B03F99005A477F /* BigNumber.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
