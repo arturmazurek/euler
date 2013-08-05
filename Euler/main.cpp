@@ -9,11 +9,13 @@
 #include <cmath>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <deque>
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <list>
 #include <map>
 #include <memory>
 #include <set>
@@ -24,12 +26,11 @@
 #include "unistd.h"
 
 #include "BigNumber.h"
+#include "util.h"
 
 using namespace std;
 
 static const int MILION = 1000000;
-
-typedef unsigned long ulong;
 
 inline long toNumber(char c);
 inline long toNumber(const vector<int>& digits);
@@ -62,10 +63,11 @@ void problem56();
 void problem57();
 void problem58();
 void problem59();
+void problem60();
 
 int main(int argc, const char * argv[])
 {    
-    problem59();
+    problem60();
 }
 
 inline long toNumber(char c) {
@@ -120,18 +122,6 @@ inline unsigned long lowestDivisor(unsigned long n) {
 
 static inline long powd(long x, long power) {
     long temp = x;
-    
-    if(power == 0) {
-        return 1;
-    }
-    while(--power) {
-        temp *= x;
-    }
-    return temp;
-}
-
-static inline long powul(ulong x, ulong power) {
-    ulong temp = x;
     
     if(power == 0) {
         return 1;
@@ -1077,23 +1067,6 @@ void problem55() {
 }
 
 static const vector<char> multiply(const vector<char>& a, const vector<char>& b) {
-    // XXX: todo
-//    std::vector<char> result;
-//    
-//    char overflow = 0;
-//    int i = 0;
-//    for(; i < a.size() && i < b.size(); ++i) {
-//        overflow += a[i] * b[i];
-//        result.push_back(overflow % 10);
-//        overflow /= 10;
-//    }
-//    
-//    if(overflow) {
-//        result.push_back(overflow);
-//    }
-//    
-//    return result;
-
     vector<char> result;
     
     for(int i = 0; i < a.size(); ++i) {
@@ -1140,8 +1113,8 @@ void problem56() {
 void problem57() {
     int result = 0;
     
-    BigNumber nom = 3;
-    BigNumber denom = 2;
+    BigNumber nom{3};
+    BigNumber denom{2};
     
     for(int i = 2; i <= 1000; ++i) {
         nom += denom;
@@ -1188,7 +1161,7 @@ void problem58() {
 
 // g++ Euler/main.cpp -o main -std=c++11 -stdlib=libc++; ./main < cipher1.txt
 void problem59() {
-    int possibleKeysCount = 0;
+//    int possibleKeysCount = 0;
     
     string cipher;
     cin >> cipher;
@@ -1245,4 +1218,52 @@ void problem59() {
     }
     
     cout << endl << "Result is: " << result << endl;
+}
+
+void problem60() {
+    static const ulong N = 1000;
+    
+    list<list<BigNumber>> possible;
+    
+    for(ulong i = 2; i <= N; ++i) {
+        if(!isPrime(i)) {
+            continue;
+        }
+        
+        for(auto& numbersList : possible) {
+            bool good = true;
+            for(const auto& number : numbersList) {
+                BigNumber temp{i};
+                temp.concat(number);
+                if(!isPrime(temp.value())) {
+                    good = false;
+                    break;
+                }
+                
+                temp = BigNumber{number};
+                temp.concat(BigNumber{i});
+                if(!isPrime(temp.value())) {
+                    good = false;
+                    break;
+                }
+            }
+            
+            if(good) {
+                numbersList.push_back(BigNumber{i});
+            }
+            
+            if(numbersList.size() == 4) {
+                ulong result = 0;
+                for(const auto& number : numbersList) {
+                    result += number.value();
+                }
+                cout << "Result is: " << result << endl;
+                return;
+            }
+        }
+        
+        possible.push_back({BigNumber{i}});
+    }
+    
+    cout << "No result" << endl;
 }
