@@ -674,12 +674,12 @@ ulong _createNumber(ulong nonWildcards, const std::vector<bool>& wildcards, int 
     
     for(ulong i = 0; i < wildcards.size(); ++i) {
         if(wildcards[i]) {
-            result += powul(10, i) * wildcardNumber;
+            result += powT<ulong>(10, i) * wildcardNumber;
         } else {
             ulong digit = nonWildcards % 10;
             nonWildcards /= 10;
             
-            result += powul(10, i) * digit;
+            result += powT<ulong>(10, i) * digit;
         }
     }
     
@@ -691,8 +691,8 @@ void problem51() {
     for(int wildcardsCount = 1; wildcardsCount <= N-1; ++wildcardsCount) {
         const int digits = N - wildcardsCount;
         
-        const ulong start = powul(10, digits-1);
-        const ulong end = powul(10, digits);
+        const ulong start = powT<ulong>(10, digits-1);
+        const ulong end = powT<ulong>(10, digits);
         
         for(ulong i = start; i < end; ++i) {
             vector<bool> wildcards(N, false);
@@ -728,8 +728,8 @@ void problem51() {
 void problem52() {
     int digitsCount = 2;
     while(true) {
-        ulong start = powul(10, digitsCount-1);
-        ulong end = powul(10, digitsCount) / 6 + 1;
+        ulong start = powT<ulong>(10, digitsCount-1);
+        ulong end = powT<ulong>(10, digitsCount) / 6 + 1;
     
         for(ulong i = start; i <= end; ++i) {
             auto digits = toDigits(i);

@@ -11,8 +11,9 @@
 
 typedef unsigned long ulong;
 
-static inline long powul(ulong x, ulong power) {
-    ulong temp = x;
+template <typename T>
+static inline long powT(const T& x, T power) {
+    T temp = x;
     
     if(power == 0) {
         return 1;
@@ -21,6 +22,11 @@ static inline long powul(ulong x, ulong power) {
         temp *= x;
     }
     return temp;
+}
+
+template <typename T>
+static inline long absT(const T& x) {
+    return x > 0 ? x : -x;
 }
 
 #endif

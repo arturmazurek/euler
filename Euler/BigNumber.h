@@ -12,19 +12,30 @@
 #include <algorithm>
 #include <cassert>  
 #include <limits>
+#include <stdexcept>
 #include <vector>
 
 #include "util.h"
 
 class BigNumber {
 public:
+    class BigNumberException : public std::runtime_error {
+    public:
+        BigNumberException(const std::string& what) : std::runtime_error(what) {}
+    };
+    
     template <typename T>
     explicit BigNumber(T value = 0) {
-        while(value > 0) {
-            mDigits.push_back(value % 10);
+        if(value < 0) {
+            mNegative = true;
+        }
+        while(value != 0) {
+            mDigits.push_back(absT(value % 10));
             value /= 10;
         }
     }
+    
+    explicit BigNumber(ulong value = 0);
     
     BigNumber& concat(const BigNumber& other);
     
@@ -55,10 +66,11 @@ private:
     
 private:
     static BigNumber sMax;
+    static BigNumber sMin;
     
     mutable std::pair<bool, unsigned long> mCached;
     std::vector<char> mDigits;
-    bool mSign;
+    bool mNegative;
 };
 
 #endif /* defined(__Euler__BigNumber__) */

@@ -11,6 +11,14 @@
 #include <ostream>
 
 BigNumber BigNumber::sMax = BigNumber{std::numeric_limits<unsigned long>::max()};
+BigNumber BigNumber::sMin = BigNumber{std::numeric_limits<unsigned long>::min()};
+
+BigNumber::BigNumber(ulong value) : mNegative{false} {
+    while(value != 0) {
+        mDigits.push_back(absT(value % 10));
+        value /= 10;
+    }
+}
 
 BigNumber& BigNumber::concat(const BigNumber& other) {
     mDigits.insert(mDigits.end(), other.mDigits.begin(), other.mDigits.end());
@@ -28,6 +36,8 @@ BigNumber& BigNumber::operator+=(const BigNumber& other) {
 }
 
 BigNumber& BigNumber::operator*=(const BigNumber& other) {
+    mNegative = mNegative ^ other.mNegative;
+    
     mDigits = std::move(multiply(mDigits, other.mDigits));
     mCached.first = false;
     
@@ -35,6 +45,8 @@ BigNumber& BigNumber::operator*=(const BigNumber& other) {
 }
 
 BigNumber& BigNumber::operator/=(const BigNumber& other) {
+    mNegative = mNegative ^ other.mNegative;
+    
     assert(!"Unimplemented");
     return *this;
 }
@@ -45,9 +57,13 @@ size_t BigNumber::digits() const {
 
 unsigned long BigNumber::value() const {
     if(!mCached.first) {
+        if(*this > sMax || *this < sMin) {
+            throw BigNumberException("Number out of built-in bounds");
+        }
+        
         mCached.second = 0;
         for(int i = 0; i < mDigits.size(); ++i) {
-            mCached.second += mDigits[i] * powul(10, i);
+            mCached.second += mDigits[i] * powT<unsigned long>(10, i);
         }
         mCached.first = true;
     }
